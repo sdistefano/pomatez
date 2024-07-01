@@ -7,10 +7,12 @@ export const SET_OPEN_AT_LOGIN = "SET_OPEN_AT_LOGIN";
 export const TRAY_ICON_UPDATE = "TRAY_ICON_UPDATE";
 export const SET_UI_THEME = "SET_UI_THEME";
 export const MINIMIZE_WINDOW = "MINIMIZE_WINDOW";
+export const POMO_COMPLETED = "POMO_COMPLETED";
 export const CLOSE_WINDOW = "CLOSE_WINDOW";
 export const SHOW_WINDOW = "SHOW_WINDOW";
 export const UPDATE_AVAILABLE = "UPDATE_AVAILABLE";
 export const INSTALL_UPDATE = "INSTALL_UPDATE";
+export const PLAY_PAUSE = "PLAY_PAUSE";
 
 export const TO_MAIN: string[] = [
   SET_ALWAYS_ON_TOP,
@@ -18,6 +20,7 @@ export const TO_MAIN: string[] = [
   SET_COMPACT_MODE,
   SET_NATIVE_TITLEBAR,
   SET_OPEN_AT_LOGIN,
+  POMO_COMPLETED,
   TRAY_ICON_UPDATE,
   SET_UI_THEME,
   MINIMIZE_WINDOW,
@@ -26,7 +29,11 @@ export const TO_MAIN: string[] = [
   INSTALL_UPDATE,
 ];
 
-export const FROM_MAIN: string[] = [UPDATE_AVAILABLE];
+export const FROM_MAIN: string[] = [
+  PLAY_PAUSE,
+  POMO_COMPLETED,
+  UPDATE_AVAILABLE,
+];
 
 export const RELEASE_NOTES_LINK =
   "https://github.com/zidoro/pomatez/releases/latest";

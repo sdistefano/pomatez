@@ -2,6 +2,7 @@ import WarningBell from "assets/audios/warning-bell.wav";
 import { SVG } from "components";
 import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "hooks/storeHooks";
+// import { ipcRenderer } from "electron";
 import { TimerStatus } from "store/timer/types";
 import {
   setEnableCompactMode,
@@ -24,6 +25,11 @@ import ResetButton from "./ResetButton";
 import Sessions from "./Sessions";
 import SkipButton from "./SkipButton";
 import VolumeButton from "./VolumeButton";
+import {
+  MINIMIZE_WINDOW,
+  PLAY_PAUSE,
+  POMO_COMPLETED,
+} from "@pomatez/shareables";
 
 type Props = {
   resetTimerAction: () => void;
@@ -63,16 +69,29 @@ const Control: React.FC<Props> = ({ resetTimerAction }) => {
     settings.enableStrictMode,
   ]);
 
+  const sendMinimize = useCallback(() => {
+    window.setTimeout(() => {
+      window.electron.send(MINIMIZE_WINDOW, {
+        minimizeToTray: settings.minimizeToTray,
+      });
+    }, 0);
+  }, [settings.minimizeToTray]);
+
   const onPlayCallback = useCallback(() => {
     if (timer.playing && settings.enableStrictMode) {
       activateWarning();
       return;
     }
-    dispatch(setPlay(!timer.playing));
+    const setValue = !timer.playing;
+    dispatch(setPlay(setValue));
+    if (setValue) {
+      sendMinimize();
+    }
   }, [
     dispatch,
     activateWarning,
     timer.playing,
+    sendMinimize,
     settings.enableStrictMode,
   ]);
 
@@ -131,6 +150,26 @@ const Control: React.FC<Props> = ({ resetTimerAction }) => {
     dispatch(setTimerType(TimerStatus.STAY_FOCUS));
     dispatch(setRound(1));
   }, [dispatch]);
+
+  const playPauseAction = useCallback(() => {
+    if (timer.playing && timer.timerType === TimerStatus.STAY_FOCUS) {
+      dispatch(setPlay(false));
+    } else {
+      dispatch(setTimerType(TimerStatus.STAY_FOCUS));
+      dispatch(setPlay(true));
+
+      sendMinimize();
+    }
+  }, [dispatch, timer.playing, sendMinimize, timer.timerType]);
+
+  useEffect(() => {
+    const electronCallback = () => playPauseAction();
+    window.electron.receive(PLAY_PAUSE, electronCallback);
+
+    return () => {
+      window.electron.stopReceive(PLAY_PAUSE);
+    };
+  }, [playPauseAction]);
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;

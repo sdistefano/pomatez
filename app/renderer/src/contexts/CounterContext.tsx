@@ -14,6 +14,7 @@ import specialBreakStartedWav from "assets/audios/special-break-started.wav";
 import thirtySecondsLeftWav from "assets/audios/thirty-seconds-left.wav";
 import { useAppDispatch, useAppSelector } from "hooks/storeHooks";
 import { TimerStatus } from "store/timer/types";
+import { POMO_COMPLETED } from "@pomatez/shareables";
 
 type CounterProps = {
   count: number;
@@ -66,9 +67,11 @@ const CounterProvider: React.FC = ({ children }) => {
         break;
       case TimerStatus.SHORT_BREAK:
         setTimerDuration(config.shortBreak);
+        window.electron.send(POMO_COMPLETED);
         break;
       case TimerStatus.LONG_BREAK:
         setTimerDuration(config.longBreak);
+        window.electron.send(POMO_COMPLETED);
         break;
       case TimerStatus.SPECIAL_BREAK:
         setDuration(duration);
@@ -196,9 +199,11 @@ const CounterProvider: React.FC = ({ children }) => {
         break;
       case TimerStatus.SHORT_BREAK:
         setTimerDuration(config.shortBreak);
+        window.electron.send(POMO_COMPLETED);
         break;
       case TimerStatus.LONG_BREAK:
         setTimerDuration(config.longBreak);
+        window.electron.send(POMO_COMPLETED);
         break;
     }
   }, [
