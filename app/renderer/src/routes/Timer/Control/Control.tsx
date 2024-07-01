@@ -65,16 +65,29 @@ const Control: React.FC<Props> = ({ resetTimerAction }) => {
     settings.enableStrictMode,
   ]);
 
+  const sendMinimize = useCallback(() => {
+    window.setTimeout(() => {
+      window.electron.send(MINIMIZE_WINDOW, {
+        minimizeToTray: settings.minimizeToTray,
+      });
+    }, 0);
+  }, [settings.minimizeToTray]);
+
   const onPlayCallback = useCallback(() => {
     if (timer.playing && settings.enableStrictMode) {
       activateWarning();
       return;
     }
-    dispatch(setPlay(!timer.playing));
+    const setValue = !timer.playing;
+    dispatch(setPlay(setValue));
+    if (setValue) {
+      sendMinimize();
+    }
   }, [
     dispatch,
     activateWarning,
     timer.playing,
+    sendMinimize,
     settings.enableStrictMode,
   ]);
 
@@ -141,15 +154,12 @@ const Control: React.FC<Props> = ({ resetTimerAction }) => {
       dispatch(setTimerType(TimerStatus.STAY_FOCUS));
       dispatch(setPlay(true));
 
-      window.setTimeout(() => {
-        window.electron.send(MINIMIZE_WINDOW, {
-          minimizeToTray: settings.minimizeToTray,
-        });
-      }, 0);
+      sendMinimize();
     }
   }, [
     dispatch,
     timer.playing,
+    sendMinimize,
     timer.timerType,
     settings.minimizeToTray,
   ]);
