@@ -8,6 +8,8 @@ import {
   shell,
   nativeImage,
 } from "electron";
+import process from "process";
+import axios from "axios";
 import debounce from "lodash.debounce";
 import notifier from "node-notifier";
 import path from "path";
@@ -24,6 +26,7 @@ import {
   SET_COMPACT_MODE,
   SET_OPEN_AT_LOGIN,
   PLAY_PAUSE,
+  POMO_COMPLETED,
 } from "@pomatez/shareables";
 import {
   activateGlobalShortcuts,
@@ -381,6 +384,14 @@ if (!onlySingleInstance) {
 
 ipcMain.on(SET_ALWAYS_ON_TOP, (e, { alwaysOnTop }) => {
   win?.setAlwaysOnTop(alwaysOnTop);
+});
+
+ipcMain.on(POMO_COMPLETED, async () => {
+  console.log("POMODORO COMPLETED");
+  console.log(process.env.API_ENDPOINT);
+  if (process.env.API_ENDPOINT) {
+    await axios.post(process.env.API_ENDPOINT, {});
+  }
 });
 
 ipcMain.on(SET_FULLSCREEN_BREAK, (e, args) => {

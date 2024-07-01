@@ -25,7 +25,11 @@ import ResetButton from "./ResetButton";
 import Sessions from "./Sessions";
 import SkipButton from "./SkipButton";
 import VolumeButton from "./VolumeButton";
-import { MINIMIZE_WINDOW, PLAY_PAUSE } from "@pomatez/shareables";
+import {
+  MINIMIZE_WINDOW,
+  PLAY_PAUSE,
+  POMO_COMPLETED,
+} from "@pomatez/shareables";
 
 type Props = {
   resetTimerAction: () => void;
@@ -156,13 +160,7 @@ const Control: React.FC<Props> = ({ resetTimerAction }) => {
 
       sendMinimize();
     }
-  }, [
-    dispatch,
-    timer.playing,
-    sendMinimize,
-    timer.timerType,
-    settings.minimizeToTray,
-  ]);
+  }, [dispatch, timer.playing, sendMinimize, timer.timerType]);
 
   useEffect(() => {
     const electronCallback = () => playPauseAction();
