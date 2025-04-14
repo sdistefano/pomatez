@@ -1,7 +1,7 @@
 {
   "name": "root",
   "private": true,
-  "version": "1.6.4",
+  "version": "1.7.0",
   "workspaces": [
     "app/*"
   ],
@@ -64,7 +64,6 @@
     "wait-on": "7.0.1"
   },
   "resolutions": {
-    "//": "Check https://github.com/facebook/create-react-app/issues/11773 to see if it has been fixed yet",
     "react-error-overlay": "6.0.9"
   }
 }
